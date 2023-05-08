@@ -39,7 +39,7 @@ public class Graph {
             while ((line = br.readLine()) != null) {
                 numLines++;
 
-                // Reading the NODES.
+                // Reading the NODES
                 // numLines needs to be greater than 2 because the data starts on the third line.
                 if (numLines > 2 && !line.equals(arc) && numLines < nextData) {
                     String[] data = line.split("\\s+");
