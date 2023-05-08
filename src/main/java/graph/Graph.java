@@ -1,6 +1,10 @@
 package graph;
 
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * A class that represents a graph: stores the array of city nodes, the
@@ -25,7 +29,30 @@ public class Graph {
      */
     public Graph(String filename) {
         // FILL IN CODE
+        try (FileReader f = new FileReader(filename)) {
+            BufferedReader br = new BufferedReader(f);
+            String line;
+            int numLines = 0;
+            String arc = "ARCS";
+            int nextData = Integer.MAX_VALUE;
 
+            while ((line = br.readLine()) != null) {
+                numLines++;
+
+                // Reading the NODES.
+                // numLines needs to be greater than 2 because the data starts on the third line.
+                if (numLines > 2 && !line.equals(arc) && numLines < nextData) {
+                    String[] data = line.split("\\s+");
+
+                    String cityName = data[0];
+                    double xCoor = Double.parseDouble(data[1]);
+                    double yCoor = Double.parseDouble(data[2]);
+                    CityNode node = new CityNode(cityName, xCoor, yCoor);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("No file found.");
+        }
     }
 
     /**
