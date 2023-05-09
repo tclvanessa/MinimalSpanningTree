@@ -18,8 +18,20 @@ public class Graph {
     private CityNode[] nodes; // nodes of the graph
     private Edge[] adjacencyList; // adjacency list; for each vertex stores a linked list of edges
     private int numEdges; // total number of edges
+    private int numNodes; // total number of nodes
+    private HashMap cityToNodeID; // hashmap that maps each city name to node id
+    private int ID;
     // Add other variable(s) as needed:
     // add a HashMap to map cities to vertexIds.
+
+    public Graph() {
+        this.nodes = new CityNode[20];
+        this.adjacencyList = new Edge[20];
+        this.numEdges = 0;
+        this.numNodes = 0;
+        this.cityToNodeID = new HashMap();
+        this.ID = 0;
+    }
 
     /**
      * Constructor. Read graph info from the given file,
@@ -48,11 +60,52 @@ public class Graph {
                     double xCoor = Double.parseDouble(data[1]);
                     double yCoor = Double.parseDouble(data[2]);
                     CityNode node = new CityNode(cityName, xCoor, yCoor);
+                    addCityNode(node);
+                    this.cityToNodeID.put(cityName, this.ID++);
+                }
+
+                // If the line equals "ARCS," continue in the loop
+                if (line.equals(arc)) {
+                    nextData = numLines + 1;
+                    continue;
+                }
+
+                // Reading the ARCS
+                if (numLines >= nextData) {
+                    String[] data = line.split("\\s+");
+
+                    String origin = data[0];
+                    String dest = data[1];
+                    int cost = Integer.parseInt(data[2]);
+
+                    int originID = (int) cityToNodeID.get(origin);
+                    int destID = (int) cityToNodeID.get(dest);
+                    Edge edge0 = new Edge(originID, destID, cost);
+                    Edge edge1 = new Edge(destID, originID, cost);
+                    addEdge(originID, edge0);
+                    addEdge(destID, edge1);
                 }
             }
         } catch (IOException e) {
             System.out.println("No file found.");
         }
+    }
+
+    public void addCityNode(CityNode node) {
+        nodes[this.numNodes++] = node;
+    }
+
+    public void addEdge(int nodeID, Edge edge) {
+        if (this.adjacencyList[nodeID] != null) {
+            Edge curr = this.adjacencyList[nodeID];
+            while (curr.next() != null) {
+                curr = curr.next();
+            }
+            curr.setNext(edge);
+        } else {
+            this.adjacencyList[nodeID] = edge;
+        }
+        this.numEdges++;
     }
 
     /**
