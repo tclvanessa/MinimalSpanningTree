@@ -37,6 +37,10 @@ public abstract class MSTAlgorithm {
      * */
     public void printMST() {
         // FILL IN CODE
+        System.out.println("Edge");
+        for (int i = 1; i < numNodes(); i++) {
+            System.out.println(" — ");
+        }
     }
 
     /**

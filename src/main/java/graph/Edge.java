@@ -10,7 +10,7 @@ public class Edge implements Comparable<Edge> {
     private Edge next;
 
     /**
-     * Constructor of class Ege
+     * Constructor of class Edge
      * @param id1 id of the first vertex
      * @param id2 id of the second vertex
      * @param cost cost (weight) of the edge
@@ -71,8 +71,7 @@ public class Edge implements Comparable<Edge> {
     @Override
     public int compareTo(Edge o) {
         // FILL IN CODE
-
-        return 0; // change
+        return 0;
     }
 
 
