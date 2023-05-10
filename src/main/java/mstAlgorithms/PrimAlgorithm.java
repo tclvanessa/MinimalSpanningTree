@@ -1,14 +1,11 @@
 package mstAlgorithms;
 
+import graph.Edge;
 import graph.Graph;
 
 /** Subclass of MSTAlgorithm. Uses Prim's algorithm to compute MST of the graph. */
 public class PrimAlgorithm extends MSTAlgorithm {
     private int sourceVertex;
-    private Graph graph;
-    private boolean[] added;
-    private int[] cost;
-    private int[] path;
 
     /**
      * Constructor for PrimAlgorithm. Takes the graph
@@ -28,40 +25,54 @@ public class PrimAlgorithm extends MSTAlgorithm {
     @Override
     public void computeMST() {
         // FILL IN CODE
-        int g[][] = new int[numNodes()][numNodes()];
+
         boolean added[] = new boolean[numNodes()];
         int cost[] = new int[numNodes()];
         int path[] = new int[numNodes()];
 
+        // Initialize table
         for (int i = 0; i < numNodes(); i++) {
             added[i] = false;
             cost[i] = Integer.MAX_VALUE;
             path[i] = -1;
         }
+        // Set source vertex
         added[sourceVertex] = true;
         cost[sourceVertex] = 0;
 
-
-        for (int i = 0; i < numNodes() - 1; i++) {
+        // Repeat numNodes times
+        for (int i = 0; i < numNodes(); i++) {
             int v = findMinimumNonAddedVertex(added, cost);
             added[v] = true;
 
-            for (int u = 0; u < numNodes(); u++) {
-                if (!added[u]) {
-                    if (cost[u] > g[v][u]) {
-                        cost[u] = g[v][u];
-                        path[u] = v;
+            // Should not be adding edges that paths aren't reassigned yet.
+            if (path[v] != -1) {
+                Edge edgeMST = new Edge(v, path[v], cost[v]); // Create new edge with the minimum added vertex.
+                addMSTEdge(edgeMST);
+            }
+
+            //
+            graph.Edge head = getFirstEdge(v);
+            while (head != null) {
+                // If not added yet, check if cost and path of the neighbor needs to be updated.
+                if (!added[head.getId2()]) {
+                    if (cost[head.getId2()] > head.getCost()) {
+                        cost[head.getId2()] = head.getCost();
+                        path[head.getId2()] = v;
                     }
                 }
+                head = head.next();
             }
         }
+        System.out.println("Prim's —————————————");
+        printMST();
     }
 
     private int findMinimumNonAddedVertex(boolean[] added, int[] cost) {
         int min = Integer.MAX_VALUE;
         int minIndex = 0;
         for (int i = 0; i < numNodes(); i++) {
-            if (added[i] == false && cost[i] < min) {
+            if (!added[i] && cost[i] < min) {
                 min = cost[i];
                 minIndex = i;
             }
