@@ -18,20 +18,11 @@ public class Graph {
     private CityNode[] nodes; // nodes of the graph
     private Edge[] adjacencyList; // adjacency list; for each vertex stores a linked list of edges
     private int numEdges; // total number of edges
-    private int numNodes; // total number of nodes
+    private int countNodes; // count number of nodes
     private HashMap cityToNodeID; // hashmap that maps each city name to node id
     private int ID;
     // Add other variable(s) as needed:
     // add a HashMap to map cities to vertexIds.
-
-    public Graph() {
-        this.nodes = new CityNode[20];
-        this.adjacencyList = new Edge[20];
-        this.numEdges = 0;
-        this.numNodes = 0;
-        this.cityToNodeID = new HashMap();
-        this.ID = 0;
-    }
 
     /**
      * Constructor. Read graph info from the given file,
@@ -41,6 +32,7 @@ public class Graph {
      */
     public Graph(String filename) {
         // FILL IN CODE
+
         try (FileReader f = new FileReader(filename)) {
             BufferedReader br = new BufferedReader(f);
             String line;
@@ -48,8 +40,19 @@ public class Graph {
             String arc = "ARCS";
             int nextData = Integer.MAX_VALUE;
 
+            this.numEdges = 0;
+            this.countNodes = 0;
+            this.cityToNodeID = new HashMap();
+            this.ID = 0;
+
             while ((line = br.readLine()) != null) {
                 numLines++;
+
+                if (numLines == 2) {
+                    int numNodes = Integer.parseInt(line);
+                    this.nodes = new CityNode[numNodes]; //read from USA.txt
+                    this.adjacencyList = new Edge[numNodes];
+                }
 
                 // Reading the NODES
                 // numLines needs to be greater than 2 because the data starts on the third line.
@@ -78,10 +81,10 @@ public class Graph {
                     String dest = data[1];
                     int cost = Integer.parseInt(data[2]);
 
-                    int originID = (int) cityToNodeID.get(origin);
-                    int destID = (int) cityToNodeID.get(dest);
+                    int originID = (int) this.cityToNodeID.get(origin);
+                    int destID = (int) this.cityToNodeID.get(dest);
                     Edge edge0 = new Edge(originID, destID, cost);
-                    Edge edge1 = new Edge(destID, originID, cost);
+                    Edge edge1 = new Edge(destID, originID, cost); // edge going in opposite direction
                     addEdge(originID, edge0);
                     addEdge(destID, edge1);
                 }
@@ -92,7 +95,7 @@ public class Graph {
     }
 
     public void addCityNode(CityNode node) {
-        nodes[this.numNodes++] = node;
+        nodes[this.countNodes++] = node;
     }
 
     public void addEdge(int nodeID, Edge edge) {
