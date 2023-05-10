@@ -1,6 +1,11 @@
 package mstAlgorithms;
 
 import graph.Graph;
+import sets.DisjointSets;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /** Subclass of MSTAlgorithm. Computes MST of the graph using Kruskal's algorithm. */
 public class KruskalAlgorithm extends MSTAlgorithm {
@@ -23,7 +28,35 @@ public class KruskalAlgorithm extends MSTAlgorithm {
     public void computeMST() {
         // FILL IN CODE
 
-    }
+        // Create sets
+        DisjointSets sets = new DisjointSets();
+        sets.createSets(numNodes());
 
+        List<graph.Edge> sortList = new ArrayList<>();
+        int count = 0;
+        while (count < numNodes()) {
+            graph.Edge head = getFirstEdge(count++);
+            while (head != null) {
+                sortList.add(head);
+                head = head.next();
+            }
+        }
+        // Sort edges in increasing order
+        Collections.sort(sortList);
+
+
+        for (int i = 0; i < sortList.size(); i++) {
+            graph.Edge nextEdge = sortList.get(i);
+            int x = sets.find(nextEdge.getId1());
+            int y = sets.find(nextEdge.getId2());
+
+            if (x != y) {
+                addMSTEdge(nextEdge);
+                sets.union(x, y);
+            }
+        }
+        printMST();
+
+    }
 }
 
