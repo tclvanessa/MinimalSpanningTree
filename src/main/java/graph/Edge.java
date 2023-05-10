@@ -71,14 +71,6 @@ public class Edge implements Comparable<Edge> {
     @Override
     public int compareTo(Edge o) {
         // FILL IN CODE
-        Integer costInt = cost;
-        int info0 = costInt.compareTo(o.getCost());
-        if (info0 == 0) {
-            return info0;
-        } else if (info0 < 0){
-            return -1;
-        } else {
-            return 1;
-        }
+        return this.cost - o.cost;
     }
 }
