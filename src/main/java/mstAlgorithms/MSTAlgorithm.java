@@ -4,7 +4,9 @@ import graph.Edge;
 import graph.Graph;
 
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /** Parent class of PrimAlgorithm and KruskalAlgorithm.
@@ -37,9 +39,8 @@ public abstract class MSTAlgorithm {
      * */
     public void printMST() {
         // FILL IN CODE
-        System.out.println("Edge");
-        for (int i = 1; i < numNodes(); i++) {
-            System.out.println(" — ");
+        for (Edge edge : edgesMST) {
+            System.out.println(graph.getNode(edge.getId1()).getCity() + " – " + graph.getNode(edge.getId2()).getCity());
         }
     }
 
