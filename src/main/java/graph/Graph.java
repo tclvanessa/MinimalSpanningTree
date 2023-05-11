@@ -20,37 +20,38 @@ public class Graph {
     private int numEdges; // total number of edges
     private int countNodes; // count number of nodes
     private HashMap cityToNodeID; // hashmap that maps each city name to node id
-    private int ID;
-    // Add other variable(s) as needed:
-    // add a HashMap to map cities to vertexIds.
+    private int ID; // id of city
 
     /**
      * Constructor. Read graph info from the given file,
      * and create nodes and edges of the graph.
      *
-     *   @param filename name of the file that has nodes and edges
+     * @param filename name of the file that has nodes and edges
      */
     public Graph(String filename) {
-        // FILL IN CODE
-
         try (FileReader f = new FileReader(filename)) {
             BufferedReader br = new BufferedReader(f);
+
+            // Variables
             String line;
             int numLines = 0;
             String arc = "ARCS";
             int nextData = Integer.MAX_VALUE;
 
+            // Variables that represent a graph
             this.numEdges = 0;
             this.countNodes = 0;
             this.cityToNodeID = new HashMap();
             this.ID = 0;
 
+            // While line in the file doesn't equal null
             while ((line = br.readLine()) != null) {
                 numLines++;
 
+                // Get the number of vertices from the USA.txt line 2
                 if (numLines == 2) {
                     int numNodes = Integer.parseInt(line);
-                    this.nodes = new CityNode[numNodes]; //read from USA.txt
+                    this.nodes = new CityNode[numNodes];
                     this.adjacencyList = new Edge[numNodes];
                 }
 
@@ -63,8 +64,8 @@ public class Graph {
                     double xCoor = Double.parseDouble(data[1]);
                     double yCoor = Double.parseDouble(data[2]);
                     CityNode node = new CityNode(cityName, xCoor, yCoor);
-                    addCityNode(node);
-                    this.cityToNodeID.put(cityName, this.ID++);
+                    addCityNode(node); // Adds node to nodes array containing the nodes of graph
+                    this.cityToNodeID.put(cityName, this.ID++); // Adds the city name and its id to the hashmap
                 }
 
                 // If the line equals "ARCS," continue in the loop
@@ -84,7 +85,7 @@ public class Graph {
                     int originID = (int) this.cityToNodeID.get(origin);
                     int destID = (int) this.cityToNodeID.get(dest);
                     Edge edge0 = new Edge(originID, destID, cost);
-                    Edge edge1 = new Edge(destID, originID, cost); // edge going in opposite direction
+                    Edge edge1 = new Edge(destID, originID, cost); // Edge going in opposite direction
                     addEdge(originID, edge0);
                     addEdge(destID, edge1);
                 }
@@ -94,11 +95,24 @@ public class Graph {
         }
     }
 
+    /**
+     * Helper method of the Graph constructor.
+     * Adds the CityNode to the nodes array containing the nodes of the graph.
+     * @param node city node
+     * */
     public void addCityNode(CityNode node) {
         nodes[this.countNodes++] = node;
     }
 
+    /**
+     * Helper method of the Graph constructor.
+     * Adds the edge to the adjacency list at the given vertex
+     * @param nodeID ID of city node
+     * @param edge edge
+     * */
     public void addEdge(int nodeID, Edge edge) {
+        // If the index of adjacency list at nodeID isn't null,
+        // iterate through the linked list to add the edge to the end
         if (this.adjacencyList[nodeID] != null) {
             Edge curr = this.adjacencyList[nodeID];
             while (curr.next() != null) {
@@ -106,7 +120,7 @@ public class Graph {
             }
             curr.setNext(edge);
         } else {
-            this.adjacencyList[nodeID] = edge;
+            this.adjacencyList[nodeID] = edge; // Adds edge to adjacency list if there are no edges there already
         }
         this.numEdges++;
     }

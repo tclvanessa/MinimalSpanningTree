@@ -1,5 +1,6 @@
 package mstAlgorithms;
 
+import graph.Edge;
 import graph.Graph;
 import sets.DisjointSets;
 
@@ -26,16 +27,16 @@ public class KruskalAlgorithm extends MSTAlgorithm {
      */
     @Override
     public void computeMST() {
-        // FILL IN CODE
-
         // Create sets
         DisjointSets sets = new DisjointSets();
         sets.createSets(numNodes());
 
+        // Create ArrayList to store the edges
         List<graph.Edge> sortList = new ArrayList<>();
         int count = 0;
+        // Iterate through all the linked list of edges
         while (count < numNodes()) {
-            graph.Edge head = getFirstEdge(count++);
+            Edge head = getFirstEdge(count++);
             while (head != null) {
                 sortList.add(head);
                 head = head.next();
@@ -44,19 +45,21 @@ public class KruskalAlgorithm extends MSTAlgorithm {
         // Sort edges in increasing order
         Collections.sort(sortList);
 
-
+        // For loop to compute the representatives of the sets that x and y belong to
         for (int i = 0; i < sortList.size(); i++) {
-            graph.Edge nextEdge = sortList.get(i);
+            Edge nextEdge = sortList.get(i);
             int x = sets.find(nextEdge.getId1());
             int y = sets.find(nextEdge.getId2());
 
+            // If x and y do not belong to the same set,
+            // add to MST and merge the sets that they belong to
             if (x != y) {
                 addMSTEdge(nextEdge);
                 sets.union(x, y);
             }
         }
+        System.out.println("Kruskal's ————————————");
         printMST();
-
     }
 }
 

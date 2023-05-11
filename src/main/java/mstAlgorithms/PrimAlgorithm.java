@@ -24,8 +24,7 @@ public class PrimAlgorithm extends MSTAlgorithm {
      * */
     @Override
     public void computeMST() {
-        // FILL IN CODE
-
+        // Arrays of the table variables
         boolean added[] = new boolean[numNodes()];
         int cost[] = new int[numNodes()];
         int path[] = new int[numNodes()];
@@ -42,7 +41,7 @@ public class PrimAlgorithm extends MSTAlgorithm {
 
         // Repeat numNodes times
         for (int i = 0; i < numNodes(); i++) {
-            int v = findMinimumNonAddedVertex(added, cost);
+            int v = findMinimumNonAddedVertex(added, cost); // Find the minimum non-added vertex v
             added[v] = true;
 
             // Should not be adding edges that paths aren't reassigned yet.
@@ -51,10 +50,10 @@ public class PrimAlgorithm extends MSTAlgorithm {
                 addMSTEdge(edgeMST);
             }
 
-            //
-            graph.Edge head = getFirstEdge(v);
+            // Gets the head of the linked lists that contains outgoing edges of vertex v
+            Edge head = getFirstEdge(v);
             while (head != null) {
-                // If not added yet, check if cost and path of the neighbor needs to be updated.
+                // If not added yet, check if cost and path of the neighbor (Id2) needs to be updated.
                 if (!added[head.getId2()]) {
                     if (cost[head.getId2()] > head.getCost()) {
                         cost[head.getId2()] = head.getCost();
@@ -68,9 +67,21 @@ public class PrimAlgorithm extends MSTAlgorithm {
         printMST();
     }
 
+    /**
+     * Helper method of computeMST() for Prim's.
+     * Finds the minimum non-added vertex using the added and cost arrays.
+     * Returns the index of the minimum.
+     * @param added Array storing boolean values of the vertices
+     * @param cost Array storing the cost of the vertices
+     * @return min index
+     * */
     private int findMinimumNonAddedVertex(boolean[] added, int[] cost) {
         int min = Integer.MAX_VALUE;
         int minIndex = 0;
+
+        // Iterate through all the vertices,
+        // and if it is not added and the cost is less than the min,
+        // then update the min and minIndex variable.
         for (int i = 0; i < numNodes(); i++) {
             if (!added[i] && cost[i] < min) {
                 min = cost[i];
